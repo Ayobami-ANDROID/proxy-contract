@@ -1,17 +1,17 @@
-import { ethers } from "hardhat";
-import { upgrades } from "hardhat";
+const { ethers, upgrades } = require("hardhat");
 
-const proxyAddress = '0x9fe46736679d2d9a65f0992f2272de9f3c7fa6e0'
-// const proxyAddress = '0x1CD0c84b7C7C1350d203677Bb22037A92Cc7e268'
 async function main() {
-  console.log(proxyAddress," original First(proxy) address")
-  const FirstV4 = await ethers.getContractFactory("firstV4")
-  console.log("Preparing upgrade to FirstV4...");
-  const firstV4Address = await upgrades.prepareUpgrade(proxyAddress, FirstV4);
-  console.log(firstV4Address, " FirstV4 implementation contract address")
+  const FirstV4 = await ethers.getContractFactory("FirstV4");
+  const proxyAddress = "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9"; // Replace with the proxy contract's address
+  const firstV4 = await upgrades.upgradeProxy(proxyAddress, FirstV4);
+  await firstV4.deployed();
+
+  console.log("FirstV4 contract upgraded. Proxy address:", firstV4.address);
 }
 
-main().catch((error) => {
-  console.error(error)
-  process.exitCode = 1
-})
+main()
+  .then(() => process.exit(0))
+  .catch((error) => {
+    console.error(error);
+    process.exit(1);
+  });

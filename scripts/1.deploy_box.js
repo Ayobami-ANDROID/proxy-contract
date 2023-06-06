@@ -1,18 +1,19 @@
-import { ethers } from "hardhat"
-import { upgrades } from "hardhat"
+const { ethers } = require("hardhat");
 
 async function main() {
+  const First = await ethers.getContractFactory("First");
+  const first = await upgrades.deployProxy(First, []);
+  await first.deployed();
 
-  const     First = await ethers.getContractFactory("first")
-  console.log("Deploying first...")
-  const first = await upgrades.deployProxy(First,[42], { initializer: 'store' })
+  console.log("First contract deployed to:", first.address);
 
-  console.log(first.address," first(proxy) address")
-  console.log(await upgrades.erc1967.getImplementationAddress(first.address)," getImplementationAddress")
-  console.log(await upgrades.erc1967.getAdminAddress(first.address)," getAdminAddress")    
+  // Store the proxy contract's address for future use
+  console.log("Proxy address:", first.address);
 }
 
-main().catch((error) => {
-  console.error(error)
-  process.exitCode = 1
-})
+main()
+  .then(() => process.exit(0))
+  .catch((error) => {
+    console.error(error);
+    process.exit(1);
+  });

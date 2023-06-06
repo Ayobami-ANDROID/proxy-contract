@@ -3,9 +3,9 @@ pragma solidity ^0.8.0;
 
 import "./first.sol";
  
-contract firstV2 is first{
+contract FirstV2 is First {
     // Increments the stored value by 1
     function increment() public {
-        store(retrieve()+1);
+        store(retrieve() + 1);
     }
 }
