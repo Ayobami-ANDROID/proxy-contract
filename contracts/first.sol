@@ -1,4 +1,3 @@
-// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
@@ -7,7 +6,8 @@ import "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
 contract First is Initializable, ERC20Upgradeable, UUPSUpgradeable, OwnableUpgradeable {
-    uint256 private value1;
+    // Change to private visibility
+    uint256 private _value1;
 
     // Emitted when the stored value changes
     event ValueChanged(uint256 newValue);
@@ -21,13 +21,13 @@ contract First is Initializable, ERC20Upgradeable, UUPSUpgradeable, OwnableUpgra
 
     // Stores a new value in the contract
     function store(uint256 newValue) public {
-        value1 = newValue;
+        _value1 = newValue; // Update the state variable
         emit ValueChanged(newValue);
     }
 
     // Reads the last stored value
     function retrieve() public view returns (uint256) {
-        return value1;
+        return _value1; // Retrieve the updated state variable
     }
 
     // Overrides the _beforeTokenTransfer function from ERC20Upgradeable

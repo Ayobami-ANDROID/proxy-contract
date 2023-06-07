@@ -2,7 +2,7 @@ const { ethers } = require("hardhat");
 
 async function main() {
   const First = await ethers.getContractFactory("First");
-  const first = await upgrades.deployProxy(First, []);
+  const first = await upgrades.deployProxy(First, [42],{initializer:"store"});
   await first.deployed();
 
   console.log("First contract deployed to:", first.address);
