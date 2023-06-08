@@ -2,35 +2,25 @@ const { ethers, upgrades } = require("hardhat");
 
 async function main() {
     const First = await ethers.getContractFactory("First");
-    const first = await upgrades.deployProxy(First, []);
-    await first.deployed();
-  
-    console.log("First contract deployed to:", first.address);
-  
-    // Store the proxy contract's address for future use
-    console.log("Proxy address:", first.address);
+    const instance = await upgrades.deployProxy(First, { initializer: 'initialize' });
+    console.log("Deployed at:", instance.address);
 
     const FirstV2 = await ethers.getContractFactory("FirstV2");
-    const firstV2 = await upgrades.upgradeProxy(first.address, FirstV2);
-    await firstV2.deployed();
-  
-    console.log("FirstV2 contract upgraded. Proxy address:", firstV2.address);
+    const upgraded = await upgrades.upgradeProxy(instance.address, FirstV2);
+    console.log("Upgraded to v2 at:", upgraded.address);
 
-const FirstV3 = await ethers.getContractFactory("FirstV3");
-  const firstV3 = await upgrades.upgradeProxy(first.address, FirstV3);
-  await firstV3.deployed();
-  console.log("FirstV3 contract upgraded. Proxy address:", firstV3.address);
+    const FirstV3 = await ethers.getContractFactory("FirstV3");
+    const upgradedV3 = await upgrades.upgradeProxy(upgraded.address, FirstV3);
+    console.log("Upgraded to v3 at:", upgradedV3.address);
 
-  const FirstV4 = await ethers.getContractFactory("FirstV4");
-  const firstV4 = await upgrades.upgradeProxy(first.address, FirstV4);
-  await firstV4.deployed();
+    const FirstV4 = await ethers.getContractFactory("FirstV4");
+    const upgradedV4 = await upgrades.upgradeProxy(upgradedV3.address, FirstV4);
+    console.log("Upgraded to v4 at:", upgradedV4.address);
+}
 
-  console.log("FirstV4 contract upgraded. Proxy address:", firstV4.address);
-  }
-  
-  main()
+main()
     .then(() => process.exit(0))
     .catch((error) => {
-      console.error(error);
-      process.exit(1);
+        console.error(error);
+        process.exit(1);
     });
